@@ -1,0 +1,104 @@
+:root{
+  --turquesa:#18cbdb;
+  --azul:#4A90E2;
+  --blanco:#F9F9F9;
+  --gris:#E8E8E8;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: var(--blanco);
+}
+
+header{
+  text-align:center;
+  padding:15px;
+  background:white;
+  border-bottom:1px solid #ccc;
+}
+
+header h1{
+  margin:0;
+  font-family:"Cormorant Garamond", serif;
+  letter-spacing:2px;
+}
+
+header p{
+  margin:6px 0 0;
+  font-size:13px;
+}
+
+/* 2 columnas */
+.contenedor{
+  display:flex;
+  gap:15px;
+  padding:15px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.columna{
+  background:white;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:12px;
+  flex:1;
+}
+
+.izquierda{ flex:0.4; }
+.derecha{ flex:0.6; }
+
+/* Responsive */
+@media (max-width:768px){
+  .contenedor{ flex-direction:column; }
+  .izquierda, .derecha{ flex:1; width: 100%; }
+  .btn-caremind, .btn.secondary { width: 100%; margin-bottom: 10px; }
+}
+
+/* Botón CareMind */
+.btn-caremind{
+  background: var(--turquesa);
+  border:1px solid rgba(0,0,0,.15);
+  color:#00323a;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Modal (popup) */
+#modalFondo{
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  overflow:auto;
+}
+
+#modalCaja{
+  background:white;
+  max-width:520px;
+  margin:40px auto;
+  padding:15px;
+  border-radius:10px;
+}
+
+#modalCaja h3{ margin-top:0; }
+
+/* Imagenes */
+.img-demo{
+  width: 100%;
+  max-width: 320px;
+  display:block;
+  margin: 10px auto;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
+
