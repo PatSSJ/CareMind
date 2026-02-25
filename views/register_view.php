@@ -1,4 +1,10 @@
-<?php require_once("views/shared/header.php"); ?>
+<?php 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+require_once("views/shared/header.php"); 
+?>
+
 
 <header>
 	<h1>CAREMIND</h1>
@@ -43,17 +49,6 @@
             	<label class="form-label">Confirmar contraseña:</label>
             	<input class="form-control" type="password" name="confirm_password" required>
         	</div>
-		
-		<div class="mb-3">
-    <label class="form-label">Tipo de usuario:</label>
-    <select class="form-control" name="rol"> 
-        <option value="1">Cuidador (Admin)</option>
-        <option value="2">Dependiente</option>
-        <option value="3">Médico</option>
-    </select>
-</div>
-
-
 		
         	<button type="submit" class="btn btn-caremind w-100 mb-2">Crear mi cuenta</button>
         	<a class="btn btn-secondary w-100" href="index.php?controller=auth&action=login">Ya tengo una cuenta</a>
