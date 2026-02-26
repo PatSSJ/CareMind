@@ -22,46 +22,48 @@
       </a>
     </p>
 
-    <?php if (isset($_SESSION['mensaje'])): ?>
-      <div class="alert alert-success">
-        <?php echo $_SESSION['mensaje']; ?>
-      </div>
-      <?php unset($_SESSION['mensaje']); ?>
-    <?php endif; ?>
+	<?php 
+	if (isset($_SESSION['mensaje'])): {
+	echo "<div class='alert alert-success'>" .
+        	htmlspecialchars($_SESSION['mensaje']);
+        	"</div>";
+	unset($_SESSION['mensaje']);
+	}
 
-    <?php if (!isset($personas) || empty($personas)): ?>
+	if (!empty($personas)) {
 
-      <p>No hay personas registradas.</p>
+		echo "<p>No hay personas registradas.</p>";
+	} else {
 
-    <?php else: ?>
+		echo "<table class='table table-striped'>";
+        	echo "<tr>
+	                <th>Nombre</th>
+            		<th>DNI</th>
+	                <th>Teléfono</th>
+            		<th>Dirección</th>
+          	                                                           </tr>";
 
-      <table class="table table-striped">
-        
-          <tr>
-            <th>Nombre</th>
-            <th>DNI</th>
-            <th>Teléfono</th>
-            <th>Dirección</th>
-          </tr>
-        
+          foreach ($personas as $p): {
 
-        
-          <?php foreach ($personas as $p): ?>
-            <tr>
-              <td><?php echo $p->nombre; ?></td>
-              <td><?php echo $p->dni; ?></td>
-              <td><?php echo $p->telefono; ?></td>
-              <td><?php echo $p->direccion; ?></td>
-            </tr>
-          <?php endforeach; ?>
-        
+		echo "<tr>";
+   		echo "<td>" . htmlspecialchars($p->nombre) . "</td>";
+                echo "<td>" . htmlspecialchars($p->dni) . "</td>";
+                echo "<td>" . htmlspecialchars($p->telefono) . "</td>";
+		echo "<td>" . htmlspecialchars($p->direcccion) . "</td>";
+		echo "<td>"
 
-      </table>
+		<a class='btn btn-danger btn-sm'
+			href='index.php?controller=personas&action=eliminar&id=" . $p->id . "'
+			onclick=\"return confirm('¿Eliminar esta persona?');\">
+			Eliminar
+		</a>
+	</td>";
+	echo "</tr>";
+	}
 
-    <?php endif; ?>
-
-  </div>
-</div>
+	echo "</table>";
+}
+?>
 
 <?php require_once("views/shared/footer.php"); ?>
 
