@@ -1,5 +1,5 @@
 <?php
-require_once "models/db/db.php";
+require_once "models/db.php";
 
 class PersonasModel {
 

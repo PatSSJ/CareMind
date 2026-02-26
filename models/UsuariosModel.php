@@ -17,8 +17,7 @@ class UsuariosModel {
    }
 
    public function insertar($nombre, $email, $password_hash, $rol_id) {
-       $sql = "INSERT INTO usuarios (nombre, email, password, rol_id)
-               VALUES (:nombre, :email, :password, :rol_id)";
+       $sql = "INSERT INTO usuarios (nombre, email, password, rol_id) VALUES (:nombre, :email, :password, :rol_id)";
 
        $stmt = $this->db->prepare($sql);
        $stmt->execute([
