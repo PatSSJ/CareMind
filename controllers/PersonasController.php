@@ -15,7 +15,7 @@ class PersonasController {
 
        try {
            $modelo = new PersonasModel();
-           $personas = $modelo->get_getAll();
+           $personas = $modelo->getAll();
            require "views/personas_view.php"; 
 	   exit;
 
@@ -41,12 +41,6 @@ class PersonasController {
            $dni     = $_POST['dni'] ?? '';
            $telefono = $_POST['telefono'] ?? '';
            $direccion = $_POST['direccion'] ?? '';
-
-	   if ($nombre == '' || $dni == '') {
-	   $_SESSION['error_fatal'] = "Nombre y DNI son obligatorios";
-	   require "views/error_fatal.php";
-	   exit;
-	}
 
            try {
                $modelo = new PersonasModel();
@@ -84,7 +78,7 @@ class PersonasController {
 
        try {
            $modelo = new PersonasModel();
-           $modelo->delete(['id']);
+           $modelo->delete($_GET['id']);
 
            $_SESSION['mensaje'] = "Persona eliminada";
            header("Location: index.php?controller=personas&action=listado"); 
