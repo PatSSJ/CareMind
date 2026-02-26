@@ -8,7 +8,7 @@
     <p>
       <?php
         if (isset($_SESSION['error_fatal'])) {
-            echo $_SESSION['error_fatal'];
+            echo htmlspecialchars($_SESSION['error_fatal']);
             unset($_SESSION['error_fatal']);
         } else {
             echo "Se ha producido un error.";
