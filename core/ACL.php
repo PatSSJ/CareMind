@@ -5,20 +5,20 @@ class ACL {
 
 	private static function conectarDB() {
 		if (!self::$db) {
-		require_once "db/db.php";
+			require_once "models/db/db.php";
 	
-		self::$db = conectar();  // devuelvo objeto pdo
+			self::$db = conectar();  // devuelvo objeto pdo
+			}
 		}
-	}
 
 
 	public static function estaAutenticado() {
 		if (session_status() === PHP_SESSION_NONE) {
-		session_start();
+			session_start();
 		}
 
 	       return isset($_SESSION['usuario']);
-   }
+	}
 
 	// Permisos desde BD según el rol del usuario: admin, cuidador, medico
 	public static function permisosUsuario($email) {
@@ -26,7 +26,8 @@ class ACL {
         self::conectarDB();
 
         $sql = "SELECT p.nombre FROM permisos p JOIN rol_permisos rp ON p.id = rp.permiso_id JOIN usuarios u ON u.rol_id = rp.rol_id  WHERE u.email = :email";
-        $stmt = self::$db->prepare($sql);
+        
+	$stmt = self::$db->prepare($sql);
         $stmt->execute([':email' => $email]);
         
 	return $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -34,10 +35,8 @@ class ACL {
 
 
 	public static function puede($permiso) {
-       
 		if (!self::estaAutenticado()) { 
 		return false;
-		}
 
 		$email = $_SESSION['usuario'];
 		$permisos = self::permisosUsuario($email);
