@@ -1,7 +1,7 @@
 <?php
-require_once "models/db.php";
+require_once "models/db/db.php";
 
-class personas_model {
+class PersonasModel {
 
 	private $db;
 
@@ -9,13 +9,13 @@ class personas_model {
 		 $this->db = conectar();
 	}
 
-	public function get_personas() {
+	public function getAll() {
 		$sql = "SELECT * FROM personas";
 		$consulta = $this->db->query($sql);
 		return $consulta->fetchAll();
 	}
 
-	public function insertar_persona($nombre, $dni, $telefono, $direccion) {
+	public function insertar($nombre, $dni, $telefono, $direccion) {
 
         $sql = "INSERT INTO personas (nombre, dni, telefono, direccion) VALUES (:nombre, :dni, :telefono, :direccion)";
 
@@ -29,6 +29,15 @@ class personas_model {
         ]);
 
 	return true;
+	}
+	
+	public function delete($id) {
+
+		$sql = "DELETE FROM personas WHERE id = :id";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([':id' => $id]);
+
+		return true;
 	}
 }
 
