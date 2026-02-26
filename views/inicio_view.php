@@ -8,7 +8,7 @@
 <div class="contenedor">
   <div class="columna izquierda text-center">
     <h2>Inicio (MVP)</h2>
-    <p>Tecnología accesible para el bienestar de las personas mayores.</p>
+    <p>Tecnología accesible para el bienestar de las personas Dependientes.</p>
   </div>
 
   <div class="columna derecha">
@@ -25,7 +25,7 @@
     <p class="text-center">
       <small>Acceso rápido para desarrollo:</small><br>
       <a href="index.php?controller=personas&action=listado" class="text-decoration-none">
-        Ir al Panel Admin
+        Ir al Panel de Cuidador
       </a>
     </p>
   </div>
