@@ -8,7 +8,7 @@
 <div class="contenedor">
 	<div class="columna izquierda">
     	<h2>Registro de Cuidador</h2>
-    	<p>Crea tu cuenta en CareMind para empezar a configurar perfiles de dependientes y sus medicaciones.</p>
+    	<p>Crea tu cuenta en CareMind para empezar a configurar perfiles de personas dependientes y las alarmas para la toma de sus medicaciones.</p>
     	<p>
             <a href="index.php?controller=auth&action=inicio" class="text-decoration-none"> Volver</a>
         </p>
@@ -16,12 +16,14 @@
 
 	<div class="columna derecha">
 
-        <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger">
-                <?php echo $_SESSION['error']; ?>
-            </div>
-            <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
+        <?php 
+	if (isset($_SESSION['error'])): {
+            echo '<div class="alert alert-danger">';
+            echo htmlspecialchars($_SESSION['error']);
+	    echo '</div>';
+            unset($_SESSION['error']);
+        }
+	?>
 
     	<form action="index.php?controller=auth&action=register" method="post">
         	<div class="mb-2">
