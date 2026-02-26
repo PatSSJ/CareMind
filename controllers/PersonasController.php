@@ -6,6 +6,7 @@ class PersonasController {
 
    public function listado() {
        ACL::requerirLogin();
+
        if (!ACL::puede('usuarios.leer')) {
            $_SESSION['error_fatal'] = "No tienes permiso para ver personas";
            require "views/error_fatal.php"; 
@@ -13,8 +14,8 @@ class PersonasController {
        }
 
        try {
-           $modelo = new personas_model();
-           $personas = $modelo->get_personas();
+           $modelo = new PersonasModel();
+           $personas = $modelo->get_getAll();
            require "views/personas_view.php"; 
 	   exit;
 
@@ -27,6 +28,7 @@ class PersonasController {
 
    public function crear() {
        ACL::requerirLogin();
+
        if (!ACL::puede('usuarios.crear')) {
            $_SESSION['error_fatal'] = "No tienes permiso para crear personas";
            require "views/error_fatal.php"; 
@@ -34,18 +36,27 @@ class PersonasController {
        }
 
        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-           $nombre  = $_POST['nombre'];
-           $dni     = $_POST['dni'];
+
+           $nombre  = $_POST['nombre'] ?? '';
+           $dni     = $_POST['dni'] ?? '';
            $telefono = $_POST['telefono'] ?? '';
            $direccion = $_POST['direccion'] ?? '';
 
+	   if ($nombre == '' || $dni == '') {
+	   $_SESSION['error_fatal'] = "Nombre y DNI son obligatorios";
+	   require "views/error_fatal.php";
+	   exit;
+	}
+
            try {
-               $modelo = new personas_model();
-               $modelo->insertar_persona($nombre, $dni, $telefono, $direccion);
-               $_SESSION['mensaje'] = "Persona creada";
+               $modelo = new PersonasModel();
+               $modelo->insertar($nombre, $dni, $telefono, $direccion);
+               
+	       $_SESSION['mensaje'] = "Persona creada";
                header("Location: index.php?controller=personas&action=listado");
                exit;
-           } catch (Exception $e) {
+           
+	} catch (Exception $e) {
                $_SESSION['error_fatal'] = $e->getMessage();
                require "views/error_fatal.php"; 
 	       exit;
@@ -58,6 +69,7 @@ class PersonasController {
 
    public function eliminar() {
        ACL::requerirLogin();
+
        if (!ACL::puede('usuarios.borrar')) {
            $_SESSION['error_fatal'] = "No tienes permiso para borrar personas";
            require "views/error_fatal.php"; 
@@ -71,8 +83,9 @@ class PersonasController {
        }
 
        try {
-           $modelo = new personas_model();
-           $modelo->delete($_GET['id']);
+           $modelo = new PersonasModel();
+           $modelo->delete(['id']);
+
            $_SESSION['mensaje'] = "Persona eliminada";
            header("Location: index.php?controller=personas&action=listado"); 
 	   exit;

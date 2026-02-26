@@ -11,8 +11,8 @@ class AuthController {
    public function login() {
        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-           $email = $_POST['email'];
-           $password = $_POST['password'];
+           $email = $_POST['email'] ?? '';
+           $password = $_POST['password'] ?? '';
 
            if ($email == '' || $password == '') {
                $_SESSION['error'] = "Email y contraseña obligatorios";
@@ -54,10 +54,10 @@ class AuthController {
    public function register() {
        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-           $nombre  = $_POST['nombre'];
-           $email   = $_POST['email'];
-           $password = $_POST['password'];
-           $confirm  = $_POST['confirm_password'];
+           $nombre  = $_POST['nombre'] ?? '';
+           $email   = $_POST['email'] ?? '';
+           $password = $_POST['password'] ?? '';
+           $confirm  = $_POST['confirm_password'] ?? '';
 
            if ($nombre == '' || $email == '' || $password == '') {
                $_SESSION['error'] = "Todos los campos son obligatorios";
@@ -102,7 +102,13 @@ class AuthController {
    }
 
    public function logout() {
+       if (session_status() === PHP_SESSION_NONE) {
+       session_start();
+       }
+
+       session_unset();
        session_destroy();
+       
        header("Location: index.php?controller=auth&action=login");
        exit;
    }

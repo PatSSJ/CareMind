@@ -1,10 +1,4 @@
-<?php 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-require_once("views/shared/header.php"); 
-?>
-
+<?php require_once("views/shared/header.php"); ?>
 
 <header>
 	<h1>CAREMIND</h1>
