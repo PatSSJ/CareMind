@@ -53,7 +53,7 @@
             </button>
 
             <a class="btn btn-secondary w-100" 
-               href="index.php?controller=auth&action=login">
+               href=" index.php?controller=auth&action=login">
                 Ya tengo una cuenta
             </a>
 
