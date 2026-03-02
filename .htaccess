@@ -1,8 +1,14 @@
+Options +Indexes
+IndexOptions +NameWidth=* +FancyIndexing
+
 RewriteEngine On
 RewriteBase /CareMind/
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^- [L]
+
+RewriteRule \.php$ - [L]
 
 RewriteRule ^([^/]+)/([^/]+)/?$ index.php?controller=$1&action=$2 [QSA,L]
 

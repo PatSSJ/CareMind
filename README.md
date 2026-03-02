@@ -75,5 +75,3 @@ Da un enfoque humano: Mejora la percepción social del proyecto.
 Pin simple/Código QR: Para el acceso del familiar.
 Toda la información se guarda localmente - cifrada.
 
-
->>>>>>> 4671f970f9be9236232e7d3ebb2a8a97aa5bf0fe
