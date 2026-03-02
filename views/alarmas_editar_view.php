@@ -1,4 +1,4 @@
-<?php include "views/shared/header.php"; ?>
+<?php require_once("views/shared/header.php"); ?>
 
 <header>
     <h1>CAREMIND</h1>
@@ -7,37 +7,42 @@
 
 <div class="contenedor">
     <div class="columna">
-        <h2>Editar alarma</h2>    
-		<p>
-            	<a class="btn btn-secondary btn-sm" href="index.php?controller=alarmas&action=listado">
-                Volver al listado
-            	</a>
-        	</p>
 
-        	<?php if (isset($al) && $al) { ?>
-            
-            	<form method="post" action="index.php?controller=alarmas&action=editar&id=<?= $al->id ?>">
-    		<div class="mb-3">
-                    <label>Fecha y hora:</label>
-                    <input class="form-control" type="datetime-local" name="fecha" required 
-                           value="<?= str_replace(' ', 'T', substr($al->fecha, 0, 16)) ?>">
+        <p>
+            <a class="btn btn-secondary btn-sm" href="index.php?controller=alarmas&action=listado">
+                Volver al listado
+            </a>
+        </p>
+
+        <?php if (!isset($alarma) || !$alarma) { ?>
+            <div class="alert alert-danger">Alarma no encontrada.</div>
+        <?php } else { ?>
+
+            <form method="post" action="index.php?controller=alarmas&action=editar&id=<?= $alarma->id ?>">
+
+                <div class="mb-3">
+                    <label class="form-label">Fecha y hora:</label>
+                    <input class="form-control" type="datetime-local" name="fecha" required
+                           value="<?= date('Y-m-d\TH:i', strtotime($alarma->fecha)); ?>">
                 </div>
 
                 <div class="mb-3">
-                    <label>ID de Medicación:</label>
-                    <input class="form-control" type="number" name="medicacion_id" required 
-                           value="<?= $al->medicacion_id ?>">
+                    <label class="form-label">Medicación ID:</label>
+                    <input class="form-control" type="number" name="medicacion_id" required
+                           value="<?= htmlspecialchars($alarma->medicacion_id) ?>">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">¿Apagada?</label>
+                    <input type="checkbox" name="apagada" <?= ($alarma->apagada ? "checked" : "") ?>>
                 </div>
 
                 <button class="btn btn-caremind" type="submit">Guardar cambios</button>
-                
-            	</form>
+            </form>
 
-		<?php } else { ?>
-            	<div class="alert alert-danger">Error: No se encontró la alarma.</div>
-        	<?php } ?>
+        <?php } ?>
 
-    	</div>
+    </div>
 </div>
 
-<?php include "views/shared/footer.php"; ?>
+<?php require_once("views/shared/footer.php"); ?>

@@ -1,8 +1,7 @@
 <?php
-require_once "models/db.php";
+require_once "db.php";
 
 class AlarmasModel {
-
     private $db;
 
     public function __construct() {
@@ -11,51 +10,54 @@ class AlarmasModel {
 
     public function getAll() {
         try {
-            $sql = "SELECT * FROM alarmas";
+            $sql = "SELECT * FROM alarmas ORDER BY fecha ASC";
             $stmt = $this->db->query($sql);
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            throw new Exception("Error al obtener alarmas: " . $e->getMessage());
+            throw new Exception("Error al obtener alarmas.");
         }
     }
 
     public function getById($id) {
         try {
-            $sql = "SELECT * FROM alarmas WHERE id = :id";
+            $sql = "SELECT * FROM alarmas WHERE id = :id LIMIT 1";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            return $stmt->fetch();
+            $stmt->execute([":id" => $id]);
+            return $stmt->fetch(PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            throw new Exception("Error al obtener la alarma: " . $e->getMessage());
+            throw new Exception("Error al buscar alarma.");
         }
     }
 
-    public function insertar($fecha, $medicacion_id) {
+    public function insertar($persona_id, $fecha, $medicacion_id) {
         try {
-            $sql = "INSERT INTO alarmas (fecha, medicacion_id, apagada) VALUES (:fecha, :medicacion_id, 0)";
+            $sql = "INSERT INTO alarmas (persona_id, fecha, medicacion_id, apagada)
+                    VALUES (:persona_id, :fecha, :medicacion_id, 0)";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([
-                ':fecha'         => $fecha,
-                ':medicacion_id' => $medicacion_id
+            return $stmt->execute([
+                ":persona_id" => $persona_id,
+                ":fecha" => $fecha,
+                ":medicacion_id" => $medicacion_id
             ]);
-            return true;
         } catch (PDOException $e) {
-            throw new Exception("Error al crear alarma: " . $e->getMessage());
+            throw new Exception("No se pudo crear la alarma.");
         }
     }
 
-    public function update($al) {
+    public function update($id, $fecha, $medicacion_id, $apagada) {
         try {
-            $sql = "UPDATE alarmas SET fecha = :fecha, medicacion_id = :medicacion_id WHERE id = :id";
+            $sql = "UPDATE alarmas
+                    SET fecha = :fecha, medicacion_id = :medicacion_id, apagada = :apagada
+                    WHERE id = :id";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([
-                ':fecha'         => $al->fecha,
-                ':medicacion_id' => $al->medicacion_id,
-                ':id'            => $al->id
+            return $stmt->execute([
+                ":fecha" => $fecha,
+                ":medicacion_id" => $medicacion_id,
+                ":apagada" => $apagada,
+                ":id" => $id
             ]);
-            return true;
         } catch (PDOException $e) {
-            throw new Exception("Error al editar alarma: " . $e->getMessage());
+            throw new Exception("No se pudo actualizar la alarma.");
         }
     }
 
@@ -63,10 +65,9 @@ class AlarmasModel {
         try {
             $sql = "DELETE FROM alarmas WHERE id = :id";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            return true;
+            return $stmt->execute([":id" => $id]);
         } catch (PDOException $e) {
-            throw new Exception("Error al borrar alarma: " . $e->getMessage());
+            throw new Exception("No se pudo eliminar la alarma.");
         }
     }
 
@@ -74,10 +75,9 @@ class AlarmasModel {
         try {
             $sql = "UPDATE alarmas SET apagada = 1 WHERE id = :id";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            return true;
+            return $stmt->execute([":id" => $id]);
         } catch (PDOException $e) {
-            throw new Exception("Error al apagar la alarma: " . $e->getMessage());
+            throw new Exception("No se pudo apagar la alarma.");
         }
     }
 }

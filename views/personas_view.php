@@ -1,69 +1,64 @@
 <?php require_once("views/shared/header.php"); ?>
 
 <header>
-  <h1>CAREMIND</h1>
-  <p>Listado de personas</p>
+    <h1>CAREMIND</h1>
+    <p>Listado de personas</p>
 </header>
 
 <div class="contenedor">
-  <div class="columna">
+    <div class="columna">
 
-    <h2>Personas</h2>
+        <h2>Personas</h2>
 
-    <p>
-      <a class="btn btn-secondary btn-sm"
-         href="index.php?controller=auth&action=logout">
-         Cerrar sesión
-      </a>
+        <p>
+            <a class="btn btn-secondary btn-sm" href="index.php?controller=auth&action=logout">Cerrar sesión</a>
+            <a class="btn btn-caremind btn-sm" href="index.php?controller=personas&action=crear">Nueva persona</a>
+            <a class="btn btn-caremind btn-sm" href="index.php?controller=alarmas&action=listado">Alarmas</a>
+            <a class="btn btn-caremind btn-sm" href="index.php?controller=medicamentos&action=listado">Medicamentos</a>
+        </p>
 
-      <a class="btn btn-caremind btn-sm"
-         href="index.php?controller=personas&action=crear">
-         Nueva persona
-      </a>
-    </p>
+        <?php if (isset($_SESSION['mensaje'])) { ?>
+            <div class="alert alert-success">
+                <?php echo htmlspecialchars($_SESSION['mensaje']); ?>
+            </div>
+            <?php unset($_SESSION['mensaje']); ?>
+        <?php } ?>
 
-	<?php 
-	if (isset($_SESSION['mensaje'])): {
-	echo "<div class='alert alert-success'>" .
-        	htmlspecialchars($_SESSION['mensaje']);
-        	"</div>";
-	unset($_SESSION['mensaje']);
-	}
+        <?php if (empty($personas)) { ?>
+            <p>No hay personas registradas.</p>
+        <?php } else { ?>
 
-	if (!empty($personas)) {
+            <table class="table table-striped">
+                <tr>
+                    <th>Nombre</th>
+                    <th>DNI</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>NSS</th>
+                    <th>Acciones</th>
+                </tr>
 
-		echo "<p>No hay personas registradas.</p>";
-	} else {
+                <?php foreach ($personas as $p) { ?>
+                    <tr>
+                        <td><?= htmlspecialchars($p->nombre) ?></td>
+                        <td><?= htmlspecialchars($p->dni) ?></td>
+                        <td><?= htmlspecialchars($p->telefono) ?></td>
+                        <td><?= htmlspecialchars($p->direccion) ?></td>
+                        <td><?= htmlspecialchars($p->num_seguridad_social) ?></td>
+                        <td>
+                            <a class="btn btn-danger btn-sm"
+                               href="index.php?controller=personas&action=eliminar&id=<?= $p->id ?>"
+                               onclick="return confirm('¿Eliminar?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </table>
 
-		echo "<table class='table table-striped'>";
-        	echo "<tr>
-	                <th>Nombre</th>
-            		<th>DNI</th>
-	                <th>Teléfono</th>
-            		<th>Dirección</th>
-          	                                                           </tr>";
+        <?php } ?>
 
-          foreach ($personas as $p): {
-
-		echo "<tr>";
-   		echo "<td>" . htmlspecialchars($p->nombre) . "</td>";
-                echo "<td>" . htmlspecialchars($p->dni) . "</td>";
-                echo "<td>" . htmlspecialchars($p->telefono) . "</td>";
-		echo "<td>" . htmlspecialchars($p->direcccion) . "</td>";
-		echo "<td>"
-
-		<a class='btn btn-danger btn-sm'
-			href='index.php?controller=personas&action=eliminar&id=" . $p->id . "'
-			onclick=\"return confirm('¿Eliminar esta persona?');\">
-			Eliminar
-		</a>
-	</td>";
-	echo "</tr>";
-	}
-
-	echo "</table>";
-}
-?>
+    </div>
+</div>
 
 <?php require_once("views/shared/footer.php"); ?>
-

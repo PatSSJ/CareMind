@@ -7,11 +7,10 @@ function conectar() {
     ];
 
     return new PDO(
-        "mysql:host=localhost;dbname=caremind_db;charset=utf8mb4",
-        "careminduser",
-        "caremindpass",
+        'mysql:host=localhost;dbname=caremind_db;charset=utf8mb4',
+        'careminduser',
+        'caremindpass',
         $opciones
     );
 }
 ?>
-

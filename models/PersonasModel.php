@@ -1,61 +1,60 @@
 <?php
-require_once "models/db.php";
+require_once "db.php";
 
-class PersonasModel
-{
+class PersonasModel {
+    private $db;
 
-	private $db;
+    public function __construct() {
+        $this->db = conectar();
+    }
 
-	public function __construct()
-	{
-		try {
-			$this->db = conectar();
-		} catch (PDOException $e) {
-			$this->error_fatal("Error al conectar con la base de datos:" . $e->getMessage());
-		}
-	}
+    public function getAll() {
+        try {
+            $sql = "SELECT * FROM personas ORDER BY nombre ASC";
+            $stmt = $this->db->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener personas.");
+        }
+    }
 
-	public function getAll()
-	{
-		try {
-			$sql = "SELECT * FROM personas";
-			$consuta = $this->db->query($sql);
-			return $consuta->fetchAll();
-		} catch (PDOException $e) {
-			error_fatal("Error al obtener el listado:" . $e->getMessage());
-		}
-	}
+    public function insertar($nombre, $dni, $telefono, $direccion, $nss) {
+        try {
+            $sql = "INSERT INTO personas (nombre, dni, telefono, direccion, num_seguridad_social)
+                    VALUES (:nombre, :dni, :telefono, :direccion, :nss)";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                ":nombre" => $nombre,
+                ":dni" => $dni,
+                ":telefono" => $telefono,
+                ":direccion" => $direccion,
+                ":nss" => $nss
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Error al insertar persona.");
+        }
+    }
 
-	public function insertar($nombre, $dni, $telefono, $direccion)
-	{
-		try {
-			$sql = "INSERT INTO personas (nombre, dni, telefono, direccion) VALUES (:nombre, :dni, :telefono, :direccion)";
+    public function borrar($id) {
+        try {
+            $sql = "DELETE FROM personas WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([":id" => $id]);
+        } catch (PDOException $e) {
+            throw new Exception("No se pudo eliminar el registro.");
+        }
+    }
 
-			$stmt = $this->db->prepare($sql);
-			$stmt->execute([
-				'nombre' => $nombre,
-				'dni' => $dni,
-				'telefono' => $telefono,
-				'direccion' => $direccion
-			]);
-
-			return true;
-		} catch (PDOException $e) {
-			error_fatal("Error al insertar el registro:" . $e->getMessage());
-		}
-	}
-
-	public function delete($id)
-	{
-		try {
-			$sql = "DELETE FROM personas WHERE id = :id";
-			$stmt = $this->db->prepare($sql);
-			$stmt->execute([':id' => $id]);
-
-			return true;
-		} catch (PDOException $e) {
-			error_fatal("Error al eliminar el registro:" . $e->getMessage());
-		}
-	}
+    public function getById($id) {
+        try {
+            $sql = "SELECT * FROM personas WHERE id = :id LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([":id" => $id]);
+            return $stmt->fetch(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            throw new Exception("Error al buscar la persona.");
+        }
+    }
 }
+
 

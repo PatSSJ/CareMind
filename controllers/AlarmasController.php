@@ -4,165 +4,129 @@ require_once "core/ACL.php";
 
 class AlarmasController {
 
+    private $model;
+
+    public function __construct() {
+        $this->model = new AlarmasModel();
+    }
+
     public function listado() {
-        ACL::requerirLogin();
-
-        if (!ACL::puede('alarmas.leer')) {
-            $_SESSION['error_fatal'] = "No tienes permiso para ver alarmas";
-            require "views/error_fatal.php";
-            exit;
-        }
-
         try {
-            $modelo = new AlarmasModel();
-            $alarmas = $modelo->getAll();
+            if (!ACL::puede('alarmas.ver')) {
+                $this->error_fatal("No tienes permiso para ver las alarmas.");
+            }
 
-            require "views/alarmas_listado_view.php";
-            exit;
+            $alarmas = $this->model->getAll();
+            require_once "views/alarmas_listado_view.php";
 
         } catch (Exception $e) {
-            $_SESSION['error_fatal'] = $e->getMessage();
-            require "views/error_fatal.php";
-            exit;
+            $this->error_fatal($e->getMessage());
         }
     }
 
     public function crear() {
-        ACL::requerirLogin();
+        try {
+            if (!ACL::puede('alarmas.crear')) {
+                $this->error_fatal("No tienes permiso para crear alarmas.");
+            }
 
-        if (!ACL::puede('alarmas.crear')) {
-            $_SESSION['error_fatal'] = "No tienes permiso para crear alarmas";
-            require "views/error_fatal.php";
-            exit;
-        }
+            if (isset($_POST['persona_id'], $_POST['fecha'], $_POST['medicacion_id'])) {
+                $this->model->insertar(
+                    (int)$_POST['persona_id'],
+                    $_POST['fecha'],
+                    (int)$_POST['medicacion_id']
+                );
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $fecha = $_POST['fecha'];
-            $medicacion_id = $_POST['medicacion_id'];
-
-            try {
-                $modelo = new AlarmasModel();
-                $modelo->insertar($fecha, $medicacion_id);
-
-                $_SESSION['mensaje'] = "Alarma creada";
+                $_SESSION['mensaje'] = "Alarma creada.";
                 header("Location: index.php?controller=alarmas&action=listado");
                 exit;
-
-            } catch (Exception $e) {
-                $_SESSION['error_fatal'] = $e->getMessage();
-                require "views/error_fatal.php";
-                exit;
             }
-        }
 
-        require "views/alarmas_crear_view.php";
-        exit;
+            require_once "views/alarmas_crear_view.php";
+
+        } catch (Exception $e) {
+            $this->error_fatal($e->getMessage());
+        }
     }
 
     public function editar() {
-        ACL::requerirLogin();
-
-        if (!ACL::puede('alarmas.editar')) {
-            $_SESSION['error_fatal'] = "No tienes permiso para editar alarmas";
-            require "views/error_fatal.php";
-            exit;
-        }
-
-        if (!isset($_GET['id'])) {
-            $_SESSION['error_fatal'] = "No se especificó alarma";
-            require "views/error_fatal.php";
-            exit;
-        }
-
         try {
-            $modelo = new AlarmasModel();
-            $al = $modelo->getById($_GET['id']);
-
-            if (!$al) {
-                $_SESSION['error_fatal'] = "Alarma no existe";
-                require "views/error_fatal.php";
-                exit;
+            if (!ACL::puede('alarmas.editar')) {
+                $this->error_fatal("No tienes permiso para editar alarmas.");
             }
 
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $al->fecha = $_POST['fecha'];
-                $al->medicacion_id = $_POST['medicacion_id'];
+            if (!isset($_GET['id'])) {
+                throw new Exception("Falta el ID.");
+            }
 
-                $modelo->update($al);
+            $id = (int)$_GET['id'];
 
-                $_SESSION['mensaje'] = "Alarma actualizada";
+            if (isset($_POST['fecha'], $_POST['medicacion_id'])) {
+                $apagada = isset($_POST['apagada']) ? 1 : 0;
+
+                $this->model->update(
+                    $id,
+                    $_POST['fecha'],
+                    (int)$_POST['medicacion_id'],
+                    $apagada
+                );
+
+                $_SESSION['mensaje'] = "Alarma actualizada.";
                 header("Location: index.php?controller=alarmas&action=listado");
                 exit;
             }
 
-            require "views/alarmas_editar_view.php";
-            exit;
+            $alarma = $this->model->getById($id);
+            require_once "views/alarmas_editar_view.php";
 
         } catch (Exception $e) {
-            $_SESSION['error_fatal'] = $e->getMessage();
-            require "views/error_fatal.php";
-            exit;
+            $this->error_fatal($e->getMessage());
         }
     }
 
     public function eliminar() {
-        ACL::requerirLogin();
-
-        if (!ACL::puede('alarmas.borrar')) {
-            $_SESSION['error_fatal'] = "No tienes permiso para borrar alarmas";
-            require "views/error_fatal.php";
-            exit;
-        }
-
-        if (!isset($_GET['id'])) {
-            $_SESSION['error_fatal'] = "No se especificó alarma";
-            require "views/error_fatal.php";
-            exit;
-        }
-
         try {
-            $modelo = new AlarmasModel();
-            $modelo->delete($_GET['id']);
+            if (!ACL::puede('alarmas.eliminar')) {
+                $this->error_fatal("No tienes permiso para eliminar alarmas.");
+            }
 
-            $_SESSION['mensaje'] = "Alarma eliminada";
+            if (!isset($_GET['id'])) {
+                throw new Exception("Falta el ID.");
+            }
+
+            $this->model->delete((int)$_GET['id']);
+
+            $_SESSION['mensaje'] = "Alarma eliminada.";
             header("Location: index.php?controller=alarmas&action=listado");
             exit;
 
         } catch (Exception $e) {
-            $_SESSION['error_fatal'] = $e->getMessage();
-            require "views/error_fatal.php";
-            exit;
+            $this->error_fatal($e->getMessage());
         }
     }
 
-    public function apagarAlarma() {
-        ACL::requerirLogin();
-
-        if (!ACL::puede('medicamentos.apagarAlarma')) {
-            $_SESSION['error_fatal'] = "No tienes permiso para apagar alarmas";
-            require "views/error_fatal.php";
-            exit;
-        }
-
-        if (!isset($_GET['id'])) {
-            $_SESSION['error_fatal'] = "No se especificó alarma";
-            require "views/error_fatal.php";
-            exit;
-        }
-
+    public function apagar() {
         try {
-            $modelo = new AlarmasModel();
-            $modelo->apagar($_GET['id']);
+            if (!isset($_GET['id'])) {
+                throw new Exception("Falta el ID.");
+            }
 
-            $_SESSION['mensaje'] = "Alarma apagada";
+            $this->model->apagar((int)$_GET['id']);
+
+            $_SESSION['mensaje'] = "Alarma apagada.";
             header("Location: index.php?controller=alarmas&action=listado");
             exit;
 
         } catch (Exception $e) {
-            $_SESSION['error_fatal'] = $e->getMessage();
-            require "views/error_fatal.php";
-            exit;
+            $this->error_fatal($e->getMessage());
         }
+    }
+
+    private function error_fatal($msj) {
+        $_SESSION['error_fatal'] = $msj;
+        require_once "views/error_fatal.php";
+        exit;
     }
 }
+
+

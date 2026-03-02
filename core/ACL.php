@@ -1,5 +1,4 @@
 <?php
-
 class ACL {
 
     private static $permisos = [
@@ -9,21 +8,21 @@ class ACL {
             'usuarios.editar',
             'usuarios.eliminar',
             'medicamentos.ver',
-	    'medicamentos.crear',
-	    'medicamentos.editar',
-	    'medicamentos.eliminar',
+            'medicamentos.crear',
+            'medicamentos.editar',
+            'medicamentos.eliminar',
             'alarmas.ver',
-	    'alarmas.crear',
-	    'alarmas.editar',
-	    'alarmas.eliminar'
-        ],
-       
-	'2' => [
-            'medicamentos.ver',
-            'alarmas.ver',
+            'alarmas.crear',
+            'alarmas.editar'
+            ,'alarmas.eliminar'
         ],
 
-	'3' => [
+        '2' => [
+            'medicamentos.ver',
+            'alarmas.ver'
+        ],
+
+        '3' => [
             'usuarios.ver',
             'usuarios.crear',
             'usuarios.editar',
@@ -31,27 +30,35 @@ class ACL {
             'medicamentos.crear',
             'medicamentos.editar',
             'medicamentos.eliminar'
-	],
+        ],
 
-	'4' => [
+        '4' => [
             'usuarios.ver',
-	    'medicamentos.ver'
-	]
-   ];
+            'medicamentos.ver'
+        ]
+    ];
 
-	public static function puede($accion) { 
-	if (!isset($_SESSION['rol'])) { 
-	return false; 
-	
-	} 
-	
-	$rol = $_SESSION['rol'];
+    public static function puede($accion) {
 
-        if (!isset(self::$permisos[$rol])) {
-                return false;
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
 
-        return in_array($accion, self::$permisos[$rol]);
+        if (!isset($_SESSION['rol'])) {
+            return false;
+        }
+
+        $rol = $_SESSION['rol'];
+
+        if ($rol == 1) {
+            return true;
+        }
+
+        if (isset(self::$permisos[$rol])) {
+            return in_array($accion, self::$permisos[$rol]);
+        }
+
+        return false;
     }
 }
 

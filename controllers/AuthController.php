@@ -3,114 +3,117 @@ require_once "models/UsuariosModel.php";
 
 class AuthController {
 
-   public function inicio() {
-       require "views/inicio_view.php";
-       exit;
-   }
+    public function __construct() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
 
-   public function login() {
-       if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    public function inicio() {
+        require_once "views/login_view.php";
+    }
 
-           $email = $_POST['email'] ?? '';
-           $password = $_POST['password'] ?? '';
+    public function login() {
+        try {
+            $model = new UsuariosModel();
 
-           if ($email == '' || $password == '') {
-               $_SESSION['error'] = "Email y contraseña obligatorios";
-               require "views/login_view.php";
-               exit;
-           }
+            // Login normal
+            if (!empty($_POST['email']) && !empty($_POST['password'])) {
 
-           try {
-               $modelo = new UsuariosModel();
-               $usuario = $modelo->getByEmail($email);
+                $usuario = $model->validar($_POST['email'], $_POST['password']);
 
-               if (!$usuario) {
-                   $_SESSION['error'] = "Usuario no existe";
-                   require "views/login_view.php";
-                   exit;
-               }
+                if ($usuario) {
+                    $_SESSION['usuario'] = $usuario;
+                    $_SESSION['rol'] = $usuario->rol_id;
+                    header("Location: index.php?controller=personas&action=listado");
+                    exit;
+                }
 
-               if (!password_verify($password, $usuario->password)) {
-                   $_SESSION['error'] = "Contraseña incorrecta";
-                   require "views/login_view.php";
-                   exit;
-               }
+                $_SESSION['error'] = "Credenciales incorrectas.";
+                header("Location: index.php?controller=auth&action=inicio");
+                exit;
+            }
 
-               $_SESSION['usuario'] = $usuario->email;
-               header("Location: index.php?controller=personas&action=listado");
-               exit;
+            // Login por PIN (solo si existe columna pin)
+            if (!empty($_POST['pin'])) {
 
-           } catch (Exception $e) {
-               $_SESSION['error_fatal'] = $e->getMessage();
-               require "views/error_fatal.php";
-               exit;
-           }
-       }
+                $usuario = $model->validarPorPin($_POST['pin']);
 
-       require "views/login_view.php";
-       exit;
-   }
+                if ($usuario) {
+                    $_SESSION['usuario'] = $usuario;
+                    $_SESSION['rol'] = $usuario->rol_id;
+                    header("Location: index.php?controller=personas&action=listado");
+                    exit;
+                }
 
-   public function register() {
-       if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $_SESSION['error'] = "PIN no válido.";
+                header("Location: index.php?controller=auth&action=inicio");
+                exit;
+            }
 
-           $nombre  = $_POST['nombre'] ?? '';
-           $email   = $_POST['email'] ?? '';
-           $password = $_POST['password'] ?? '';
-           $confirm  = $_POST['confirm_password'] ?? '';
+            header("Location: index.php?controller=auth&action=inicio");
+            exit;
 
-           if ($nombre == '' || $email == '' || $password == '') {
-               $_SESSION['error'] = "Todos los campos son obligatorios";
-               require "views/register_view.php";
-               exit;
-           }
+        } catch (Throwable $e) {
+            $this->error_fatal($e->getMessage());
+        }
+    }
 
-           if ($password != $confirm) {
-               $_SESSION['error'] = "Las contraseñas no coinciden";
-               require "views/register_view.php";
-               exit;
-           }
+    public function register() {
+        try {
+            $model = new UsuariosModel();
 
-           try {
-               $modelo = new UsuariosModel();
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                require_once "views/register_view.php";
+                return;
+            }
 
-               if ($modelo->getByEmail($email)) {
-                   $_SESSION['error'] = "Ese email ya está registrado";
-                   require "views/register_view.php";
-                   exit;
-               }
+            $nombre = trim($_POST['nombre'] ?? '');
+            $email  = trim($_POST['email'] ?? '');
+            $pass1  = $_POST['password'] ?? '';
+            $pass2  = $_POST['confirm_password'] ?? '';
 
-               $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            if ($nombre == '' || $email == '' || $pass1 == '' || $pass2 == '') {
+                $_SESSION['error'] = "Rellena todos los campos.";
+                header("Location: index.php?controller=auth&action=register");
+                exit;
+            }
 
-               $rol_id = 1;
+            if ($pass1 !== $pass2) {
+                $_SESSION['error'] = "Las contraseñas no coinciden.";
+                header("Location: index.php?controller=auth&action=register");
+                exit;
+            }
 
-               $modelo->insertar($nombre, $email, $password_hash, $rol_id);
+            // rol 1 (cuidador)
+            $ok = $model->crear($nombre, $email, $pass1, 1);
 
-               $_SESSION['mensaje'] = "Usuario registrado correctamente";
-               header("Location: index.php?controller=auth&action=login");
-               exit;
+            if (!$ok) {
+                $_SESSION['error'] = "No se pudo crear la cuenta (¿email ya usado?).";
+                header("Location: index.php?controller=auth&action=register");
+                exit;
+            }
 
-           } catch (Exception $e) {
-               $_SESSION['error_fatal'] = $e->getMessage();
-               require "views/error_fatal.php";
-               exit;
-           }
-       }
+            $_SESSION['mensaje'] = "Cuenta creada. Ya puedes iniciar sesión.";
+            header("Location: index.php?controller=auth&action=inicio");
+            exit;
 
-       require "views/register_view.php";
-       exit;
-   }
+        } catch (Throwable $e) {
+            $this->error_fatal($e->getMessage());
+        }
+    }
 
-   public function logout() {
-       if (session_status() === PHP_SESSION_NONE) {
-       session_start();
-       }
+    public function logout() {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=inicio");
+        exit;
+    }
 
-       session_unset();
-       session_destroy();
-       
-       header("Location: index.php?controller=auth&action=login");
-       exit;
-   }
+    private function error_fatal($msj) {
+        $_SESSION['error_fatal'] = $msj;
+        require_once "views/error_fatal.php";
+        exit;
+    }
 }
 
