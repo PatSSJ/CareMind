@@ -31,7 +31,7 @@
             </div>
             <?php unset($_SESSION['mensaje']); ?>
         <?php } ?>
-
+        
         <form action="index.php?controller=auth&action=login" method="post" class="mb-4">
             <div class="mb-3">
                 <label class="form-label">Correo electrónico:</label>
@@ -54,13 +54,21 @@
 
         <hr>
 
-        <form action="index.php?controller=auth&action=login" method="post">
+        <h3>Acceso Médico (PIN)</h3>
+
+        <form action="index.php?controller=pin&action=login" method="post" class="mb-3">
             <div class="mb-3">
-                <label>Acceso con PIN:</label>
-                <input class="form-control" type="text" name="pin" required>
+                <label class="form-label">PIN:</label>
+                <input class="form-control" type="text" name="pin_usuario" required>
             </div>
-            <button type="submit" class="btn btn-danger">Acceder con PIN</button>
+            <button type="submit" class="btn btn-outline-secondary">Entrar con PIN</button>
         </form>
+
+        <a href="index.php?controller=pin&action=obtener" class="btn btn-outline-secondary btn-sm">
+            Obtener PIN
+        </a>
+
+        <hr>
 
     </div>
 </div>

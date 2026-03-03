@@ -1,79 +1,50 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+session_start();
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+$controller = $_GET['controller'] ?? 'auth';
+$action     = $_GET['action'] ?? 'inicio';
+
+// Controladores sin login
+$publicControllers = ['auth', 'pin'];
+
+
+if (!isset($_SESSION['usuario']) && !in_array($controller, $publicControllers)) {
+    header("Location: index.php?controller=auth&action=inicio");
+    exit;
 }
 
-require_once "models/db.php";
+// Mapeo controladores asi dejo los 4 roles ordenados para el login
+$map = [
+    'auth'         => 'AuthController',
+    'personas'     => 'PersonasController',
+    'alarmas'      => 'AlarmasController',
+    'medicamentos' => 'MedicamentosController',
+    'pin'          => 'PinController'
+];
 
-require_once "controllers/AuthController.php";
-require_once "controllers/PersonasController.php";
-require_once "controllers/AlarmasController.php";
-require_once "controllers/MedicamentosController.php";
-
-$controller = isset($_GET['controller']) ? $_GET['controller'] : 'auth';
-$action = isset($_GET['action']) ? $_GET['action'] : 'inicio';
-
-if ($controller == 'auth') {
-
-    $c = new AuthController();
-
-    if ($action == 'inicio') { $c->inicio(); exit; }
-    if ($action == 'login') { $c->login(); exit; }
-    if ($action == 'logout') { $c->logout(); exit; }
-    if ($action == 'register') { $c->register(); exit; }
-
-    $_SESSION['error_fatal'] = "Acceso Incorrecto";
+if (!isset($map[$controller])) {
+    $_SESSION['error_fatal'] = "Controlador no válido";
     require "views/error_fatal.php";
     exit;
 }
 
-if ($controller == 'personas') {
+$controllerName = $map[$controller];
+$controllerFile = "controllers/$controllerName.php";
 
-    $c = new PersonasController();
-
-    if ($action == 'listado') { $c->listado(); exit; }
-    if ($action == 'crear') { $c->crear(); exit; }
-    if ($action == 'eliminar') { $c->eliminar(); exit; }
-
-    $_SESSION['error_fatal'] = "Acción no válida en personas";
+if (!file_exists($controllerFile)) {
+    $_SESSION['error_fatal'] = "Archivo del controlador no encontrado";
     require "views/error_fatal.php";
     exit;
 }
 
-if ($controller == 'medicamentos') {
+require_once $controllerFile;
 
-    $c = new MedicamentosController();
+$c = new $controllerName();
 
-    if ($action == 'listado') { $c->listado(); exit; }
-    if ($action == 'crear') { $c->crear(); exit; }
-    if ($action == 'editar') { $c->editar(); exit; }
-    if ($action == 'eliminar') { $c->eliminar(); exit; }
-
-    $_SESSION['error_fatal'] = "Acción no válida en medicamentos";
+if (!method_exists($c, $action)) {
+    $_SESSION['error_fatal'] = "Acción no válida";
     require "views/error_fatal.php";
     exit;
 }
 
-if ($controller == 'alarmas') {
-
-    $c = new AlarmasController();
-
-    if ($action == 'listado') { $c->listado(); exit; }
-    if ($action == 'crear') { $c->crear(); exit; }
-    if ($action == 'editar') { $c->editar(); exit; }
-    if ($action == 'eliminar') { $c->eliminar(); exit; }
-    if ($action == 'apagaralarma') { $c->apagarAlarma(); exit; }
-
-    $_SESSION['error_fatal'] = "Acción no válida en Alarmas";
-    require "views/error_fatal.php";
-    exit;
-}
-
-$_SESSION['error_fatal'] = "Controlador no válido";
-require "views/error_fatal.php";
-exit;
-?>
+$c->$action();
