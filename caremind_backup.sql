@@ -29,7 +29,7 @@ CREATE TABLE `alarmas` (
   `fecha` datetime NOT NULL,
   `apagada` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `alarmas` (
 
 LOCK TABLES `alarmas` WRITE;
 /*!40000 ALTER TABLE `alarmas` DISABLE KEYS */;
+INSERT INTO `alarmas` VALUES (1,-4,-4,'2026-03-03 15:00:00',0);
 /*!40000 ALTER TABLE `alarmas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,6 +148,32 @@ INSERT INTO `personas` VALUES (1,'Albert','N1234567B','66666666','Sant Adriá de
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pines_temporales`
+--
+
+DROP TABLE IF EXISTS `pines_temporales`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pines_temporales` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pin` varchar(10) NOT NULL,
+  `fecha_expiracion` datetime NOT NULL,
+  `usado` tinyint DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pines_temporales`
+--
+
+LOCK TABLES `pines_temporales` WRITE;
+/*!40000 ALTER TABLE `pines_temporales` DISABLE KEYS */;
+INSERT INTO `pines_temporales` VALUES (1,'705267','2026-03-03 04:38:22',0),(2,'449742','2026-03-03 06:16:29',1),(3,'316092','2026-03-04 16:27:22',0),(4,'189029','2026-03-04 16:27:44',0),(5,'865445','2026-03-04 16:28:20',0),(6,'840280','2026-03-04 16:28:59',0),(7,'344889','2026-03-04 16:46:04',1),(8,'418771','2026-03-04 17:44:49',1),(9,'434077','2026-03-04 17:46:40',1);
+/*!40000 ALTER TABLE `pines_temporales` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `rol_permisos`
 --
 
@@ -214,7 +241,7 @@ CREATE TABLE `usuarios` (
   `pin` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -223,7 +250,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (3,'Patricia San Jose','psanjose@institutmvm.cat','$2y$10$u77cDxKGrJMeukn2arxMDOAn5pSMYw9ivhY1xogBSlUuFgjWWUKi2',1,NULL),(4,'Patricia San Jose 2','patriciasoramasanjose@gmail.com','$2y$10$za1LbHsGle8Z02INtiFbpOuNQKn1LmqZAdPtZ8wLaI4.z4ZzBPMp.',1,NULL);
+INSERT INTO `usuarios` VALUES (3,'Patricia San Jose','psanjose@institutmvm.cat','$2y$10$u77cDxKGrJMeukn2arxMDOAn5pSMYw9ivhY1xogBSlUuFgjWWUKi2',1,NULL),(4,'Patricia San Jose 2','patriciasoramasanjose@gmail.com','$2y$10$za1LbHsGle8Z02INtiFbpOuNQKn1LmqZAdPtZ8wLaI4.z4ZzBPMp.',1,NULL),(5,'Alejandro Sucilla','asucilla@institutmvm.cat','$2y$10$Z3NRjqKhHpEQTpMQzQIwy.G.DZcf5rkXhD0.uHGFvtWgEI0DLO8Du',1,NULL);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -236,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-02 20:05:01
+-- Dump completed on 2026-03-05  0:27:02
