@@ -5,18 +5,18 @@ Startup dedicada al desarrollo de tecnología accesible para el bienestar de las
 ---
 
 ## 📱 Prototipo y Versión Final
-Para ver cómo funciona la aplicación y el detalle de cada pantalla, haz clic en el siguiente botón:
+Para ver cómo funciona la aplicación, el detalle de cada pantalla y el flujo de los 4 roles, haz clic en el siguiente botón:
 
 [![Ver Presentación en Canva](https://img.shields.io/badge/CLIC_AQUÍ_PARA_VER_PRESENTACIÓN-00C4CC?style=for-the-badge&logo=canva&logoColor=white)](https://www.canva.com/design/DAHDDLWRt60/qnb9q0G9vnzHbympmzaVdg/view?utm_content=DAHDDLWRt60&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hce7c9a1926)
 
 ---
 
 ## ⚙️ Especificaciones Técnicas
-Este proyecto implementa una lógica de 4 roles (Admin, Dependiente, Doctor con cuenta y Doctor con PIN temporal) utilizando:
+Este proyecto implementa una arquitectura de 4 roles (Admin, Dependiente, Doctor con cuenta y Doctor con PIN temporal) utilizando:
 
-* **PHP / PDO:** Para una gestión de base de datos segura.
-* **Try-Catch:** Control de excepciones para evitar errores fatales.
-* **Arquitectura:** Código limpio usando llaves `{}`.
+* **PHP / PDO:** Para una gestión de base de datos segura y profesional.
+* **Manejo de Excepciones:** Bloques `try-catch` para evitar errores críticos y proteger la información sensible.
+* **Interfaz Adaptada:** Diseño pensado para la alfabetización digital básica (Persona A del proyecto).
 
 ---
 © 2026 CareMind Technologies - Barcelona
