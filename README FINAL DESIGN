@@ -1,43 +1,25 @@
 # 🏥 CareMind Technologies: Conectar es Cuidar
 
-> **Proyecto de Bienestar y Salud** | Startup nacida en el Institut Montalbán (Barcelona).
-> Una solución tecnológica diseñada para mejorar la autonomía de las personas mayores y facilitar la labor de sus cuidadores.
+> **Proyecto de Bienestar y Salud** | Startup nacida en el Institut Montalbán.
+> Una solución tecnológica para la autonomía de personas mayores.
 
 ---
 
 ## 📱 Presentación Interactiva del Proyecto
-Para comprender la experiencia completa de nuestra WebApp, hemos preparado una presentación detallada en Canva donde podrás explorar la interfaz final y la lógica de cada pantalla.
+Haz clic en la imagen para ver la interfaz final y el detalle de cada pantalla en Canva:
 
-[![Ver Presentación CareMind](https://img.shields.io/badge/VER_PRESENTACIÓN_EN_CANVA-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white)](https://www.canva.com/design/DAHDDLWRt60/qnb9q0G9vnzHbympmzaVdg/view?utm_content=DAHDDLWRt60&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hce7c9a1926)
+[![Ver Presentación](PEGA_AQUÍ_EL_LINK_QUE_COPIASTE_EN_EL_PASO_1)](https://www.canva.com/design/DAHDDLWRt60/qnb9q0G9vnzHbympmzaVdg/view?utm_content=DAHDDLWRt60&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hce7c9a1926)
 
-*Haz clic en el botón superior para abrir la maqueta detallada de la aplicación.*
-
----
-
-## 🔍 Descripción del Sistema y Roles
-
-CareMind es una WebApp robusta que organiza la atención médica y diaria a través de 4 interfaces personalizadas, garantizando que cada usuario vea solo lo que necesita:
-
-1.  **Administrador (Cuidador):** Panel central para gestionar medicación, citas y alertas.
-2.  **Dependiente:** Interfaz simplificada con iconos grandes y botones de alta visibilidad para el adulto mayor.
-3.  **Doctor con Cuenta:** Acceso completo al historial y seguimiento clínico del paciente.
-4.  **Doctor Invitado:** Acceso seguro mediante un **PIN de duración limitada** para consultas de emergencia.
+*Si no carga la imagen, puedes verla directamente [aquí](https://www.canva.com/design/DAHDDLWRt60/qnb9q0G9vnzHbympmzaVdg/view?utm_content=DAHDDLWRt60&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hce7c9a1926).*
 
 ---
 
-## 💻 Detalles Técnicos (Nivel Desarrollo)
-
-Este repositorio refleja el aprendizaje de estándares modernos de programación aplicados a la salud:
-
-* **Persistencia de Datos:** Uso de **PDO (PHP Data Objects)** para una comunicación segura y eficiente con la base de datos.
-* **Seguridad y Robustez:** Implementación de bloques **Try and Catch** para la captura de excepciones, evitando errores fatales que comprometan la experiencia del usuario.
-* **Código Limpio:** Estructura basada en llaves `{}` para un flujo lógico claro (sin el uso de sintaxis alternativa como `endif`).
-* **Arquitectura de Roles:** Lógica de permisos para diferenciar el acceso entre el cuidador y el personal médico.
+## 🔍 Roles del Sistema
+El proyecto incluye una arquitectura de 4 roles gestionada mediante **PHP y PDO**:
+* **Admin:** Gestión total de medicación.
+* **Dependiente:** Interfaz simplificada y accesible.
+* **Doctor con Cuenta:** Historial clínico completo.
+* **Doctor Invitado:** Acceso por **PIN temporal**.
 
 ---
-
-## 🚀 Versión Final
-La presentación de Canva adjunta arriba representa la **versión final de la web y la aplicación**, detallando cada pantalla individualmente y mostrando cómo CareMind resuelve los problemas de adherencia al tratamiento médico.
-
----
-© 2026 CareMind Technologies - Barcelona
+© 2026 CareMind Technologies
