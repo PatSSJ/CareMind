@@ -1,0 +1,42 @@
+# 🏥 CareMind Technologies: Conectar es Cuidar
+
+> **Proyecto de Bienestar y Salud** | Startup nacida en el Institut Montalbán.
+> Una solución tecnológica diseñada para mejorar la autonomía de las personas mayores y facilitar la labor de sus cuidadores.
+
+---
+
+## 📱 Presentación Interactiva del Proyecto
+Para comprender la experiencia completa de nuestra WebApp, hemos preparado una presentación detallada en Canva donde podrás explorar la interfaz y la lógica del sistema.
+
+[![Ver Presentación CareMind](https://img.shields.io/badge/Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white)](https://www.canva.com/design/DAHDDLWRt60/qnb9q0G9vnzHbympmzaVdg/view?utm_content=DAHDDLWRt60&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hce7c9a1926)
+
+*Haz clic en el botón superior o [en este enlace](https://www.canva.com/design/DAHDDLWRt60/qnb9q0G9vnzHbympmzaVdg/view?utm_content=DAHDDLWRt60&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hce7c9a1926) para abrir la maqueta final.*
+
+---
+
+## 🔍 Exploración de la Interfaz y Pantallas
+
+En el enlace de arriba podrás visualizar la **versión final** de nuestra propuesta, detallando cada módulo crítico:
+
+### 👤 Roles de Usuario Integrados
+Nuestra arquitectura permite la interacción de 4 perfiles distintos, cada uno con permisos específicos:
+1.  **Administrador (Cuidador):** Control total sobre el calendario de medicación y alertas.
+2.  **Dependiente:** Interfaz simplificada con botones grandes y recordatorios visuales.
+3.  **Doctor con Cuenta:** Acceso al historial clínico y seguimiento del paciente.
+4.  **Doctor Invitado:** Acceso temporal y limitado mediante un **PIN de duración definida**.
+
+### 🛠️ Detalles Técnicos de la Demo
+* **Gestión de Medicación:** Pantallas de aviso con contraste alto para evitar confusiones.
+* **Panel de Control:** Visualización de constantes vitales y adherencia al tratamiento.
+* **Seguridad:** Implementación de lógica de errores mediante bloques `try-catch` para asegurar la integridad de los datos médicos.
+
+---
+
+## 💻 Desarrollo del Proyecto
+Este repositorio contiene el código fuente de la WebApp, desarrollado con un enfoque pedagógico pero robusto:
+* **Base de Datos:** Gestión mediante **PDO** para una comunicación segura.
+* **Control de Errores:** Manejo de excepciones para evitar fallos críticos en el sistema.
+* **Clean Code:** Estructura modular sin el uso de etiquetas alternativas como `endif`, priorizando la claridad de las llaves `{}`.
+
+---
+© 2026 CareMind Technologies - Barcelona
