@@ -1,0 +1,147 @@
+Elección de tecnología para la aplicación móvil
+===============================================
+
+* * *
+
+Introducción
+------------
+
+Para el desarrollo de la aplicación móvil se evaluaron dos posibles enfoques:
+
+*   **Capacitor**
+*   **Flutter**
+
+Ambas tecnologías permiten desarrollar aplicaciones móviles a partir de una misma base de código o reutilizando una aplicación web existente. Tras analizar las ventajas y limitaciones de cada opción, se decidió utilizar **Flutter** como tecnología principal para el desarrollo de la aplicación.
+
+* * *
+
+Alternativa evaluada: Capacitor
+-------------------------------
+
+**Capacitor** es una herramienta que permite convertir una aplicación web en una aplicación móvil. Su funcionamiento consiste en **envolver la aplicación web dentro de una WebView**, generando una aplicación instalable en el dispositivo.
+
+### Funcionamiento
+
+1.  Se instala Capacitor en el proyecto web.
+2.  Se genera una estructura compatible con **Android Studio**.
+3.  La aplicación móvil carga la web existente dentro de la app.
+4.  Finalmente se genera un archivo instalable (APK).
+
+### Ventajas
+
+*   Permite **aprovechar directamente el código del frontend existente**.
+*   Implementación rápida.
+*   Fácil conversión de una web en una aplicación móvil.
+
+### Inconvenientes
+
+*   Dependencia de plugins JavaScript.
+*   Acceso más limitado a funcionalidades nativas del dispositivo.
+*   Menor control sobre el rendimiento de la aplicación.
+
+* * *
+
+Tecnología seleccionada: Flutter
+--------------------------------
+
+Finalmente se decidió utilizar **Flutter**, un framework multiplataforma desarrollado por Google que utiliza el lenguaje **Dart**.
+
+Flutter permite **desarrollar aplicaciones con una única base de código** que pueden ejecutarse en diferentes plataformas como:
+
+*   Android
+*   iOS
+*   Web
+
+Además, Flutter es **compatible con Android Studio**, lo que permite desarrollar y probar la aplicación utilizando el **emulador de Android**, facilitando las pruebas sin necesidad de un dispositivo físico.
+
+* * *
+
+Arquitectura de la aplicación
+-----------------------------
+
+La arquitectura de la aplicación se basa en tres componentes principales:
+
+*   **Aplicación móvil desarrollada en Flutter**
+*   **Backend en PHP**
+*   **Base de datos MySQL**
+
+La comunicación entre la aplicación móvil y el servidor se realiza mediante **peticiones HTTP a una API REST**, que devuelve los datos en formato **JSON**.
+
+### Flujo de comunicación
+
+1.  La aplicación realiza una petición HTTP al servidor.
+2.  El servidor **PHP** recibe la petición.
+3.  PHP consulta la **base de datos MySQL**.
+4.  MySQL devuelve los datos al servidor.
+5.  PHP responde a la aplicación con un **JSON**.
+6.  La aplicación procesa el JSON y muestra la información en la interfaz.
+
+* * *
+
+Funcionalidades principales
+---------------------------
+
+### Sistema de alarmas
+
+La aplicación permite configurar alarmas que se almacenan en el dispositivo móvil.
+
+Para ello se utiliza el paquete `flutter_local_notifications`.
+
+#### Funcionamiento
+
+1.  La aplicación realiza una petición HTTP a la API (`api_alarmas.php`).
+2.  Las alarmas se guardan en el dispositivo.
+3.  Cuando llega la hora programada, se genera una notificación en el teléfono para avisar al usuario.
+
+* * *
+
+### Notas de voz
+
+La aplicación permite grabar y reproducir notas de voz.
+
+Para ello se utilizan componentes del sistema que permiten:
+
+*   grabar audio
+*   reproducir audio
+*   gestionar archivos almacenados en el dispositivo
+
+También es necesario gestionar permisos del usuario como:
+
+*   acceso al micrófono
+*   almacenamiento
+
+* * *
+
+### Sistema de notificaciones
+
+La aplicación utiliza notificaciones locales para avisar al usuario cuando se activa una alarma.
+
+Esto permite mostrar avisos directamente en el dispositivo incluso si la aplicación no está abierta.
+
+* * *
+
+Backend y API REST
+------------------
+
+El backend está desarrollado utilizando **PHP y MySQL**.
+
+Se han creado varios **endpoints** que devuelven datos en formato JSON.
+
+**Ejemplo de archivos del backend:**
+
+*   `index.php`
+*   `api_alarmas.php`
+*   `confirmar_toma.php`
+
+Estos endpoints permiten que la aplicación móvil consulte y envíe información al servidor.
+
+* * *
+
+Decisión Final
+--------------
+
+Tras analizar las distintas opciones, se decidió utilizar **Flutter** para el desarrollo de la aplicación móvil.
+
+Aunque **Capacitor** permite convertir una web existente en una aplicación de forma rápida, **Flutter ofrece mayor control, mejor rendimiento y una arquitectura más escalable**.
+
+Además, su integración con **Android Studio** y el **emulador de Android** facilita el desarrollo y las pruebas de la aplicación durante todo el proceso de desarrollo.
