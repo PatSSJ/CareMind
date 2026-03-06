@@ -12,12 +12,15 @@ class PersonasController {
 
     public function listado() {
         try {
+
             if (!ACL::puede('usuarios.ver')) {
                 $this->error_fatal("Acceso denegado al listado.");
             }
 
             $model = new PersonasModel();
-            $personas = $model->getAll();
+            $ownerId = $_SESSION['usuario']->id;
+            $personas = $model->getAll($ownerId);
+
             require_once "views/personas_view.php";
 
         } catch (Exception $e) {
@@ -27,18 +30,22 @@ class PersonasController {
 
     public function crear() {
         try {
+
             if (!ACL::puede('usuarios.crear')) {
                 $this->error_fatal("No tienes autorización para dar de alta.");
             }
 
             if (isset($_POST['nombre'], $_POST['dni'], $_POST['num_seguridad_social'])) {
                 $model = new PersonasModel();
+                $ownerId = $_SESSION['usuario']->id;
+
                 $model->insertar(
                     $_POST['nombre'],
                     $_POST['dni'],
                     $_POST['telefono'] ?? '',
                     $_POST['direccion'] ?? '',
-                    $_POST['num_seguridad_social']
+                    $_POST['num_seguridad_social'],
+                    $ownerId
                 );
 
                 $_SESSION['mensaje'] = "Persona guardada con éxito.";
@@ -55,6 +62,7 @@ class PersonasController {
 
     public function eliminar() {
         try {
+
             if (!ACL::puede('usuarios.eliminar')) {
                 $this->error_fatal("No tienes permisos para eliminar usuarios.");
             }
@@ -64,9 +72,12 @@ class PersonasController {
             }
 
             $model = new PersonasModel();
-            $model->borrar($_GET['id']);
+            $ownerId = $_SESSION['usuario']->id;
+            $id = (int) $_GET['id'];
 
+            $model->borrar($id, $ownerId);
             $_SESSION['mensaje'] = "Registro eliminado correctamente.";
+
             header("Location: index.php?controller=personas&action=listado");
             exit;
 
@@ -75,9 +86,5 @@ class PersonasController {
         }
     }
 }
-
-
-
-
 
 

@@ -16,8 +16,10 @@ class MedicamentosController {
                 $this->error_fatal("No tienes permiso para ver el inventario.");
             }
 
+            $ownerId = $_SESSION['usuario']->id;
             $model = new MedicamentosModel();
-            $medicamentos = $model->getAll();
+            $medicamentos = $model->getAll($ownerId);
+
             require_once "views/medicamentos_listado_view.php";
 
         } catch (Exception $e) {
@@ -32,8 +34,10 @@ class MedicamentosController {
             }
 
             if (isset($_POST['nombre']) && isset($_POST['dosis'])) {
+                $ownerId = $_SESSION['usuario']->id;
                 $model = new MedicamentosModel();
-                $model->insertar($_POST['nombre'], $_POST['dosis']);
+                $model->insertar($_POST['nombre'], $_POST['dosis'], $ownerId);
+
                 $_SESSION['mensaje'] = "Medicamento guardado.";
                 header("Location: index.php?controller=medicamentos&action=listado");
                 exit;
@@ -53,8 +57,9 @@ class MedicamentosController {
             }
 
             if (isset($_GET['id'])) {
+                $ownerId = $_SESSION['usuario']->id;
                 $model = new MedicamentosModel();
-                $model->delete($_GET['id']);
+                $model->delete((int)$_GET['id'], $ownerId);
             }
 
             header("Location: index.php?controller=medicamentos&action=listado");
@@ -65,5 +70,4 @@ class MedicamentosController {
         }
     }
 }
-
 

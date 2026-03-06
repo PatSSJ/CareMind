@@ -1,5 +1,7 @@
 <?php
 require_once "models/AlarmasModel.php";
+require_once "models/PersonasModel.php";
+require_once "models/MedicamentosModel.php";
 require_once "core/ACL.php";
 
 class AlarmasController {
@@ -7,6 +9,10 @@ class AlarmasController {
     private $model;
 
     public function __construct() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->model = new AlarmasModel();
     }
 
@@ -16,7 +22,9 @@ class AlarmasController {
                 $this->error_fatal("No tienes permiso para ver las alarmas.");
             }
 
-            $alarmas = $this->model->getAll();
+            $ownerId = $_SESSION['usuario']->id;
+            $alarmas = $this->model->getAll($ownerId);
+
             require_once "views/alarmas_listado_view.php";
 
         } catch (Exception $e) {
@@ -30,17 +38,29 @@ class AlarmasController {
                 $this->error_fatal("No tienes permiso para crear alarmas.");
             }
 
-            if (isset($_POST['persona_id'], $_POST['fecha'], $_POST['medicacion_id'])) {
-                $this->model->insertar(
-                    (int)$_POST['persona_id'],
-                    $_POST['fecha'],
-                    (int)$_POST['medicacion_id']
-                );
+            $ownerId = $_SESSION['usuario']->id;
 
-                $_SESSION['mensaje'] = "Alarma creada.";
+            if (isset($_POST['persona_id']) && isset($_POST['fecha']) && isset($_POST['medicacion_id'])) {
+
+                $persona_id = $_POST['persona_id'];
+                $fecha = $_POST['fecha'];
+                $medicacion_id = $_POST['medicacion_id'];
+
+                $ok = $this->model->insertar($persona_id, $fecha, $medicacion_id, $ownerId);
+
+                if (!$ok) {
+                    $this->error_fatal("No puedes crear alarmas para perfiles o medicamentos que no son tuyos.");
+                }
+
+                $_SESSION['mensaje'] = "Alarma creada correctamente.";
                 header("Location: index.php?controller=alarmas&action=listado");
                 exit;
             }
+
+            $personasModel = new PersonasModel();
+            $medicamentosModel = new MedicamentosModel();
+            $personas = $personasModel->getAll($ownerId);
+            $medicamentos = $medicamentosModel->getAll($ownerId);
 
             require_once "views/alarmas_crear_view.php";
 
@@ -59,24 +79,33 @@ class AlarmasController {
                 throw new Exception("Falta el ID.");
             }
 
-            $id = (int)$_GET['id'];
+            $ownerId = $_SESSION['usuario']->id;
+            $id = $_GET['id'];
 
-            if (isset($_POST['fecha'], $_POST['medicacion_id'])) {
-                $apagada = isset($_POST['apagada']) ? 1 : 0;
+            if (isset($_POST['fecha']) && isset($_POST['medicacion_id'])) {
+                if (isset($_POST['apagada'])) {
+                    $apagada = 1;
+                } else {
+                    $apagada = 0;
+                }
 
-                $this->model->update(
-                    $id,
-                    $_POST['fecha'],
-                    (int)$_POST['medicacion_id'],
-                    $apagada
-                );
+                $ok = $this->model->update($id, $_POST['fecha'], $_POST['medicacion_id'], $apagada, $ownerId);
+
+                if (!$ok) {
+                    $this->error_fatal("No puedes editar alarmas o usar medicamentos que no son tuyos.");
+                }
 
                 $_SESSION['mensaje'] = "Alarma actualizada.";
                 header("Location: index.php?controller=alarmas&action=listado");
                 exit;
             }
 
-            $alarma = $this->model->getById($id);
+            $alarma = $this->model->getById($id, $ownerId);
+
+            if (!$alarma) {
+                $this->error_fatal("No existe la alarma o no es tuya.");
+            }
+
             require_once "views/alarmas_editar_view.php";
 
         } catch (Exception $e) {
@@ -94,7 +123,12 @@ class AlarmasController {
                 throw new Exception("Falta el ID.");
             }
 
-            $this->model->delete((int)$_GET['id']);
+            $ownerId = $_SESSION['usuario']->id;
+            $ok = $this->model->delete($_GET['id'], $ownerId);
+
+            if (!$ok) {
+                $this->error_fatal("No puedes eliminar alarmas que no son tuyas.");
+            }
 
             $_SESSION['mensaje'] = "Alarma eliminada.";
             header("Location: index.php?controller=alarmas&action=listado");
@@ -111,7 +145,12 @@ class AlarmasController {
                 throw new Exception("Falta el ID.");
             }
 
-            $this->model->apagar((int)$_GET['id']);
+            $ownerId = $_SESSION['usuario']->id;
+            $ok = $this->model->apagar($_GET['id'], $ownerId);
+
+            if (!$ok) {
+                $this->error_fatal("No puedes apagar alarmas que no son tuyas.");
+            }
 
             $_SESSION['mensaje'] = "Alarma apagada.";
             header("Location: index.php?controller=alarmas&action=listado");
@@ -122,11 +161,9 @@ class AlarmasController {
         }
     }
 
-    private function error_fatal($msj) {
-        $_SESSION['error_fatal'] = $msj;
+    private function error_fatal($mensaje) {
+        $_SESSION['error_fatal'] = $mensaje;
         require_once "views/error_fatal.php";
         exit;
     }
 }
-
-

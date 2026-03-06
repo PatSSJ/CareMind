@@ -1,8 +1,10 @@
 <?php
+
 class ACL {
 
-    private static $permisos = [
-        '1' => [
+    private static $permisos = array(
+
+        '1' => array(
             'usuarios.ver',
             'usuarios.crear',
             'usuarios.editar',
@@ -13,16 +15,16 @@ class ACL {
             'medicamentos.eliminar',
             'alarmas.ver',
             'alarmas.crear',
-            'alarmas.editar'
-            ,'alarmas.eliminar'
-        ],
+            'alarmas.editar',
+            'alarmas.eliminar'
+        ),
 
-        '2' => [
+        '2' => array(
             'medicamentos.ver',
             'alarmas.ver'
-        ],
+        ),
 
-        '3' => [
+        '3' => array(
             'usuarios.ver',
             'usuarios.crear',
             'usuarios.editar',
@@ -30,13 +32,13 @@ class ACL {
             'medicamentos.crear',
             'medicamentos.editar',
             'medicamentos.eliminar'
-        ],
+        ),
 
-        '4' => [
+        '4' => array(
             'usuarios.ver',
             'medicamentos.ver'
-        ]
-    ];
+        )
+    );
 
     public static function puede($accion) {
 
@@ -44,11 +46,15 @@ class ACL {
             session_start();
         }
 
-        if (!isset($_SESSION['rol'])) {
+        if (!isset($_SESSION['usuario'])) {
             return false;
         }
 
-        $rol = $_SESSION['rol'];
+        if (!isset($_SESSION['usuario']->rol_id)) {
+            return false;
+        }
+
+        $rol = $_SESSION['usuario']->rol_id;
 
         if ($rol == 1) {
             return true;
